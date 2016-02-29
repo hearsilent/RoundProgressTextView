@@ -22,20 +22,20 @@ public class RoundProgressTextView extends TextView {
 	private int progress;
 	float progressConvert;
 
-	RectF progressRightOval = new RectF(), progressLeftOval = new RectF(), rightOval = new RectF(),
-			leftOval = new RectF();
-	Paint progressPaint = new Paint(Paint.ANTI_ALIAS_FLAG), paint =
+	private RectF progressRightOval = new RectF(), progressLeftOval = new RectF(), rightOval =
+			new RectF(), leftOval = new RectF();
+	private Paint progressPaint = new Paint(Paint.ANTI_ALIAS_FLAG), paint =
 			new Paint(Paint.ANTI_ALIAS_FLAG);
 
-	float progressStrokeWidth;
-	float strokeWidth;
-	int progressColor;
+	private float progressStrokeWidth;
+	private float strokeWidth;
+	private int progressColor;
 
-	int width;
-	int height;
+	private int width;
+	private int height;
 	int _width;
-	int disWidth;
-	float semicircle;
+	private int disWidth;
+	private float semicircle;
 
 	public RoundProgressTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
