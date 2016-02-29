@@ -1,29 +1,36 @@
-# Universal CollapsingToolbarLayout TabLayout
+# RoundProgressTextView
 
-CollapsingToolbarLayout with TabLayout.
+TextView with Round Pogress.
 
 ## Screenshot
 
-### Extend
-<img src="https://raw.githubusercontent.com/hearsilent/Universal-CollapsingToolbarLayout-TabLayout-Example/master/screenshots/device-2016-02-20-121446_framed.png" height="500">
-### Collapsed
-<img src="https://raw.githubusercontent.com/hearsilent/Universal-CollapsingToolbarLayout-TabLayout-Example/master/screenshots/device-2016-02-20-121512_framed.png" height="500">
-
 # Usage
 
-Just Clone and Build.
+If you want change progress value programmatically call:
+```
+setProgress(int progress)
+```
+Else if you want change progress but not in UI thread, then call:
+```
+setProgressNotInUiThread(int progress)
+```
+
 
 # Customization
 
-You can change header view to what you want.
+You can customize to what you want.
 ```
-<com.flaviofaria.kenburnsview.KenBurnsView
-	android:id="@+id/imageView_header"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:contentDescription="@null"
-	android:fitsSystemWindows="true"
-	app:layout_collapseMode="parallax"/>
+<hearsilent.roundprogresstextview.RoundProgressTextView
+	android:layout_width="200sp"
+	android:layout_height="40sp"
+	android:gravity="center"
+	android:text="HearSilent"
+	android:textSize="17sp"
+	app:max="100"
+	app:progress="35"
+	app:progress_color="#1e88e5"
+	app:progress_stoke_width="2.5"
+	app:stoke_width="1"/>
 ```
 
 ## Compatibility

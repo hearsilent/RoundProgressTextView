@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<declare-styleable name="RoundProgressTextView">
+
+		<attr name="progress_color" format="color"/>
+		<attr name="stoke_width" format="float"/>
+		<attr name="progress_stoke_width" format="float"/>
+		<attr name="progress" format="integer"/>
+		<attr name="max" format="integer"/>
+
+	</declare-styleable>
+
+</resources>
