@@ -8,11 +8,11 @@ TextView with Round Pogress.
 # Usage
 
 If you want change progress value programmatically call:
-```
+```java
 setProgress(int progress)
 ```
 Else if you want change progress but not in UI thread, then call:
-```
+```java
 setProgressNotInUiThread(int progress)
 ```
 
@@ -20,7 +20,7 @@ setProgressNotInUiThread(int progress)
 # Customization
 
 You can customize to what you want.
-```
+```java
 <hearsilent.roundprogresstextview.RoundProgressTextView
 	android:layout_width="200sp"
 	android:layout_height="40sp"
