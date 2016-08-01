@@ -1,5 +1,6 @@
 package hearsilent.roundprogresstextview;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -114,7 +115,7 @@ public class RoundProgressTextView extends TextView {
 
 		canvas.drawColor(Color.TRANSPARENT);
 
-		canvas.drawArc(rightOval, -90, 180, false, paint);
+		canvas.drawArc(rightOval, -91, 182, false, paint);
 		canvas.drawArc(leftOval, 90, 180, false, paint);
 		canvas.drawLine(width / 2, progressStrokeWidth, disWidth + width / 2, progressStrokeWidth,
 				paint);
@@ -130,7 +131,7 @@ public class RoundProgressTextView extends TextView {
 					progressPaint);
 		}
 		if (progressConvert > disWidth / 2 + semicircle) {
-			canvas.drawArc(progressRightOval, -90, 180, false, progressPaint);
+			canvas.drawArc(progressRightOval, -91, 182, false, progressPaint);
 		} else if (progressConvert > disWidth / 2) {
 			float angle = (progressConvert - disWidth / 2) / semicircle * 180;
 			canvas.drawArc(progressRightOval, -90, angle, false, progressPaint);
@@ -160,20 +161,49 @@ public class RoundProgressTextView extends TextView {
 	}
 
 	public int getMaxProgress() {
-		return maxProgress;
+		return maxProgress / 100;
 	}
 
 	public void setMaxProgress(int maxProgress) {
-		this.maxProgress = maxProgress;
+		this.maxProgress = maxProgress * 100;
 	}
 
 	public void setProgress(int progress) {
-		this.progress = progress > maxProgress ? maxProgress : progress;
-		this.invalidate();
+		progress = progress * 100 > maxProgress ? maxProgress : progress * 100;
+		if (Math.abs(progress - this.progress) > 1) {
+			final ValueAnimator valueAnimator = ValueAnimator.ofInt(this.progress, progress);
+			valueAnimator.setDuration(800);
+			valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+				@Override
+				public void onAnimationUpdate(ValueAnimator valueAnimator) {
+					RoundProgressTextView.this.progress = (int) valueAnimator.getAnimatedValue();
+					invalidate();
+				}
+			});
+			valueAnimator.start();
+		} else {
+			this.progress = progress * 100 > maxProgress ? maxProgress : progress * 100;
+			invalidate();
+		}
 	}
 
 	public void setProgressNotInUiThread(int progress) {
-		this.progress = progress > maxProgress ? maxProgress : progress;
-		this.postInvalidate();
+		progress = progress * 100 > maxProgress ? maxProgress : progress * 100;
+		if (Math.abs(progress - this.progress) > 1) {
+			final ValueAnimator valueAnimator = ValueAnimator.ofInt(this.progress, progress);
+			valueAnimator.setDuration(800);
+			valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+				@Override
+				public void onAnimationUpdate(ValueAnimator valueAnimator) {
+					RoundProgressTextView.this.progress = (int) valueAnimator.getAnimatedValue();
+					postInvalidate();
+				}
+			});
+		} else {
+			this.progress = progress * 100 > maxProgress ? maxProgress : progress * 100;
+			postInvalidate();
+		}
 	}
 }

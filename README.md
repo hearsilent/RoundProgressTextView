@@ -3,6 +3,7 @@
 TextView with Round Pogress.
 
 ## Screenshot
+<img src="https://raw.githubusercontent.com/hearsilent/RoundProgressTextView/master/screenshots/screenrecord.gif" height="500">
 <img src="https://raw.githubusercontent.com/hearsilent/RoundProgressTextView/master/screenshots/layout-2016-02-29-172603.png" height="500">
 
 # Usage

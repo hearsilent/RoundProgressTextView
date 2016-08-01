@@ -12,6 +12,7 @@
 	tools:context=".SampleActivity">
 
 	<hearsilent.roundprogresstextview.RoundProgressTextView
+		android:id="@+id/roundProgressTextView"
 		android:layout_width="200sp"
 		android:layout_height="40sp"
 		android:gravity="center"
