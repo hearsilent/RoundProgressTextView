@@ -201,6 +201,7 @@ public class RoundProgressTextView extends TextView {
 					postInvalidate();
 				}
 			});
+			valueAnimator.start();
 		} else {
 			this.progress = progress * 100 > maxProgress ? maxProgress : progress * 100;
 			postInvalidate();
