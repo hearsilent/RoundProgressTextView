@@ -4,35 +4,38 @@ TextView with Round Pogress.
 
 ## Screenshot
 <img src="https://raw.githubusercontent.com/hearsilent/RoundProgressTextView/master/screenshots/screenrecord.gif" height="500">
-<img src="https://raw.githubusercontent.com/hearsilent/RoundProgressTextView/master/screenshots/layout-2016-02-29-172603.png" height="500">
+<img src="https://raw.githubusercontent.com/hearsilent/RoundProgressTextView/master/screenshots/screenshot.png" height="500">
 
 # Usage
 
 If you want change progress value programmatically call:
 ```java
-setProgress(int progress)
+setProgress(int progress, int duration)
 ```
 Else if you want change progress but not in UI thread, then call:
 ```java
-setProgressNotInUiThread(int progress)
+setProgressNotInUiThread(int progress, int duration)
 ```
 
 
 # Customization
 
 You can customize to what you want.
-```java
+```xml
 <hearsilent.roundprogresstextview.RoundProgressTextView
+	android:id="@+id/roundProgressTextView"
 	android:layout_width="200sp"
 	android:layout_height="40sp"
+	android:layout_centerInParent="true"
 	android:gravity="center"
 	android:text="HearSilent"
 	android:textSize="17sp"
 	app:max="100"
 	app:progress="35"
 	app:progress_color="#1e88e5"
-	app:progress_stoke_width="2.5"
-	app:stoke_width="1"/>
+	app:progress_fill_color="#de1e88e5"
+	app:progress_stoke_width="2.5dp"
+	app:stoke_width="1dp"/>
 ```
 
 ## Compatibility
@@ -45,7 +48,7 @@ I'd be really happy if you sent me links to your projects where you use my compo
 
 ## License
 
-    Copyright 2016, HearSilent
+    Copyright 2017, HearSilent
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

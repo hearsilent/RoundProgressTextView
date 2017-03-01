@@ -11,7 +11,7 @@ public class SampleActivity extends AppCompatActivity {
 	Runnable runnable;
 
 	RoundProgressTextView mRoundProgressTextView;
-	private static int PROGRESS_DELAYED = 1000;
+	private static int PROGRESS_DELAYED = 800;
 
 	int progress = 15;
 
@@ -30,7 +30,7 @@ public class SampleActivity extends AppCompatActivity {
 
 	private void setUpView() {
 		mRoundProgressTextView.setMaxProgress(15);
-		mRoundProgressTextView.setProgress(progress);
+		mRoundProgressTextView.setProgress(progress, PROGRESS_DELAYED - 100);
 
 		handler = new Handler(Looper.getMainLooper());
 		runnable = new Runnable() {
@@ -42,7 +42,7 @@ public class SampleActivity extends AppCompatActivity {
 				} else {
 					progress = 15;
 				}
-				mRoundProgressTextView.setProgress(progress);
+				mRoundProgressTextView.setProgress(progress, PROGRESS_DELAYED - 100);
 				handler.postDelayed(runnable, PROGRESS_DELAYED);
 			}
 		};
