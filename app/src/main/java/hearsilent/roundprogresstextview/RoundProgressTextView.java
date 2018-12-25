@@ -6,14 +6,18 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PathEffect;
+import android.graphics.PathMeasure;
 import android.graphics.RectF;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.widget.TextView;
+import android.view.View;
 
-public class RoundProgressTextView extends TextView {
+public class RoundProgressTextView extends AppCompatTextView {
 
 	private static final float DEFAULT_PROGRESS_STOKE_WIDTH = 2.5f;
 	private static final float DEFAULT_STOKE_WIDTH = 1f;
@@ -39,11 +43,6 @@ public class RoundProgressTextView extends TextView {
 	private float padding;
 	private int progressColor, progressFillColor;
 
-	private float width;
-	private float height;
-	private float disWidth;
-	private float semicircle;
-
 	public RoundProgressTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
@@ -67,6 +66,8 @@ public class RoundProgressTextView extends TextView {
 		strokeOffset += padding;
 		a.recycle();
 
+		setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+
 		setUpPaint();
 	}
 
@@ -80,54 +81,67 @@ public class RoundProgressTextView extends TextView {
 	}
 
 	@Override
-	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-		super.onLayout(changed, left, top, right, bottom);
-		if (changed) {
-			width = this.getWidth();
-			height = this.getHeight();
-			float _width = width;
-
-			if (width != height) {
-				float min = Math.min(width, height);
-				width = min;
-				height = min;
-			}
-			disWidth = _width - width;
-
-			rightOval.left = strokeOffset;
-			rightOval.top = strokeOffset;
-			rightOval.right = width - strokeOffset;
-			rightOval.bottom = height - strokeOffset;
-			rightOval.offset(disWidth - padding, 0);
-
-			leftOval.left = strokeOffset;
-			leftOval.top = strokeOffset;
-			leftOval.right = width - strokeOffset;
-			leftOval.bottom = height - strokeOffset;
-			leftOval.offset(padding, 0);
-
-			progressRightOval.left = progressStrokeOffset;
-			progressRightOval.top = progressStrokeOffset;
-			progressRightOval.right = width - progressStrokeOffset;
-			progressRightOval.bottom = height - progressStrokeOffset;
-			progressRightOval.offset(disWidth - padding, 0);
-
-			progressLeftOval.left = progressStrokeOffset;
-			progressLeftOval.top = progressStrokeOffset;
-			progressLeftOval.right = width - progressStrokeOffset;
-			progressLeftOval.bottom = height - progressStrokeOffset;
-			progressLeftOval.offset(padding, 0);
-
-			semicircle = (width * (float) Math.PI / 2);
-			maxProgressConvert = (disWidth + semicircle) * 2;
-
-			path.reset();
-			path.addArc(leftOval, 90, 180);
-			path.quadTo(width / 2, strokeOffset, disWidth + width / 2 - padding, strokeOffset);
-			path.addArc(rightOval, -90, 180);
-			path.quadTo(disWidth + width / 2 - padding, height - strokeOffset, width / 2,
-					height - strokeOffset);
+	protected void onSizeChanged(int width, int height, int oldwidth, int oldheight) {
+		super.onSizeChanged(width, height, oldwidth, oldheight);
+		if (width > 0 && height > 0) {
+			setUp(width, height);
 		}
+	}
+
+	private void setUp(float width, float height) {
+		float _width = width;
+
+		if (width != height) {
+			float min = Math.min(width, height);
+			width = min;
+			height = min;
+		}
+		float disWidth = _width - width;
+
+		rightOval.left = strokeOffset;
+		rightOval.top = strokeOffset;
+		rightOval.right = width - strokeOffset;
+		rightOval.bottom = height - strokeOffset;
+		rightOval.offset(disWidth - padding, 0);
+
+		leftOval.left = strokeOffset;
+		leftOval.top = strokeOffset;
+		leftOval.right = width - strokeOffset;
+		leftOval.bottom = height - strokeOffset;
+		leftOval.offset(padding, 0);
+
+		progressRightOval.left = progressStrokeOffset;
+		progressRightOval.top = progressStrokeOffset;
+		progressRightOval.right = width - progressStrokeOffset;
+		progressRightOval.bottom = height - progressStrokeOffset;
+		progressRightOval.offset(disWidth - padding, 0);
+
+		progressLeftOval.left = progressStrokeOffset;
+		progressLeftOval.top = progressStrokeOffset;
+		progressLeftOval.right = width - progressStrokeOffset;
+		progressLeftOval.bottom = height - progressStrokeOffset;
+		progressLeftOval.offset(padding, 0);
+
+		float semicircle = (width * (float) Math.PI / 2);
+		maxProgressConvert = (disWidth + semicircle) * 2;
+
+		path.reset();
+		path.arcTo(leftOval, 90, 180);
+		path.lineTo(rightOval.centerX(), strokeOffset);
+		path.arcTo(rightOval, -90, 180);
+		path.lineTo(leftOval.centerX(), height - strokeOffset);
+		path.close();
+
+		progressPath.reset();
+		progressPath.moveTo((disWidth + width) / 2, progressStrokeOffset);
+		progressPath.lineTo(progressRightOval.centerX(), progressStrokeOffset);
+		progressPath.arcTo(progressRightOval, -90, 180);
+		progressPath.lineTo(progressLeftOval.centerX(), height - progressStrokeOffset);
+		progressPath.arcTo(progressLeftOval, 90, 180);
+		progressPath.lineTo((disWidth + width) / 2, progressStrokeOffset);
+		progressPath.close();
+
+		invalidate();
 	}
 
 	@Override
@@ -139,44 +153,6 @@ public class RoundProgressTextView extends TextView {
 		canvas.drawColor(Color.TRANSPARENT);
 
 		canvas.drawPath(path, paint);
-
-		progressPath.reset();
-		progressPath.moveTo((disWidth + width) / 2, progressStrokeOffset);
-		if (progressConvert >= disWidth / 2) {
-			progressPath.quadTo((disWidth + width) / 2, progressStrokeOffset,
-					disWidth + width / 2 - padding, progressStrokeOffset);
-		} else if (progressConvert > 0) {
-			progressPath.quadTo((disWidth + width) / 2, progressStrokeOffset,
-					(disWidth + width) / 2 + progressConvert - padding, progressStrokeOffset);
-		}
-		if (progressConvert >= disWidth / 2 + semicircle) {
-			progressPath.addArc(progressRightOval, -90, 180);
-		} else if (progressConvert > disWidth / 2) {
-			float angle = (progressConvert - disWidth / 2) / semicircle * 180;
-			progressPath.addArc(progressRightOval, -90, angle);
-		}
-		if (progressConvert >= disWidth * 3 / 2 + semicircle) {
-			progressPath.quadTo(disWidth + width / 2 - padding, height - progressStrokeOffset,
-					width / 2, height - progressStrokeOffset);
-		} else if (progressConvert > disWidth / 2 + semicircle) {
-			float offset = progressConvert - (disWidth / 2 + semicircle);
-			progressPath.quadTo(disWidth + width / 2 - padding, height - progressStrokeOffset,
-					disWidth + width / 2 - offset, height - progressStrokeOffset);
-		}
-		if (progressConvert >= disWidth * 3 / 2 + semicircle * 2) {
-			progressPath.addArc(progressLeftOval, 90, 180);
-		} else if (progressConvert > disWidth * 3 / 2 + semicircle) {
-			float angle = (progressConvert - (disWidth * 3 / 2 + semicircle)) / semicircle * 180;
-			progressPath.addArc(progressLeftOval, 90, angle);
-		}
-		if (progress == maxProgress) {
-			progressPath.quadTo(width / 2, progressStrokeOffset, (disWidth + width) / 2,
-					progressStrokeOffset);
-		} else if (progressConvert > disWidth * 3 / 2 + semicircle * 2) {
-			float offset = progressConvert - (disWidth * 3 / 2 + semicircle * 2);
-			progressPath.quadTo(width / 2, progressStrokeOffset, width / 2 + offset,
-					progressStrokeOffset);
-		}
 		canvas.drawPath(progressPath, progressPaint);
 	}
 
@@ -201,41 +177,65 @@ public class RoundProgressTextView extends TextView {
 	}
 
 	public void setProgress(int progress, int duration) {
-		progress = progress * 100 > maxProgress ? maxProgress : progress * 100;
+		progress = Math.min(maxProgress, progress * 100);
+		if (this.progress == progress) {
+			return;
+		}
+		PathMeasure pathMeasure = new PathMeasure(progressPath, false);
+		final float length = pathMeasure.getLength();
 		if (Math.abs(progress - this.progress) > 1) {
-			final ValueAnimator valueAnimator = ValueAnimator.ofInt(this.progress, progress);
+			ValueAnimator valueAnimator = ValueAnimator.ofInt(this.progress, progress);
 			valueAnimator.setDuration(duration);
 			valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
 				@Override
 				public void onAnimationUpdate(ValueAnimator valueAnimator) {
 					RoundProgressTextView.this.progress = (int) valueAnimator.getAnimatedValue();
+					int value = (int) valueAnimator.getAnimatedValue();
+					PathEffect effect = new DashPathEffect(new float[]{length, length},
+							((maxProgress - value) / (float) maxProgress) * length);
+					progressPaint.setPathEffect(effect);
 					invalidate();
 				}
 			});
 			valueAnimator.start();
 		} else {
-			this.progress = progress * 100 > maxProgress ? maxProgress : progress * 100;
+			this.progress = progress;
+			PathEffect effect = new DashPathEffect(new float[]{length, length},
+					((maxProgress - progress) / (float) maxProgress) * length);
+			progressPaint.setPathEffect(effect);
 			invalidate();
 		}
 	}
 
 	public void setProgressNotInUiThread(int progress, int duration) {
-		progress = progress * 100 > maxProgress ? maxProgress : progress * 100;
+		progress = Math.min(maxProgress, progress * 100);
+		if (this.progress == progress) {
+			return;
+		}
+		PathMeasure pathMeasure = new PathMeasure(progressPath, false);
+		final float length = pathMeasure.getLength();
 		if (Math.abs(progress - this.progress) > 1) {
-			final ValueAnimator valueAnimator = ValueAnimator.ofInt(this.progress, progress);
+			ValueAnimator valueAnimator = ValueAnimator.ofInt(this.progress, progress);
 			valueAnimator.setDuration(duration);
 			valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
 				@Override
 				public void onAnimationUpdate(ValueAnimator valueAnimator) {
 					RoundProgressTextView.this.progress = (int) valueAnimator.getAnimatedValue();
+					int value = (int) valueAnimator.getAnimatedValue();
+					PathEffect effect = new DashPathEffect(new float[]{length, length},
+							((maxProgress - value) / (float) maxProgress) * length);
+					progressPaint.setPathEffect(effect);
 					postInvalidate();
 				}
 			});
 			valueAnimator.start();
 		} else {
-			this.progress = progress * 100 > maxProgress ? maxProgress : progress * 100;
+			this.progress = progress;
+			PathEffect effect = new DashPathEffect(new float[]{length, length},
+					((maxProgress - progress) / (float) maxProgress) * length);
+			progressPaint.setPathEffect(effect);
 			postInvalidate();
 		}
 	}

@@ -25,7 +25,7 @@ public class SampleActivity extends AppCompatActivity {
 	}
 
 	private void findView() {
-		mRoundProgressTextView = (RoundProgressTextView) findViewById(R.id.roundProgressTextView);
+		mRoundProgressTextView = findViewById(R.id.roundProgressTextView);
 	}
 
 	private void setUpView() {
