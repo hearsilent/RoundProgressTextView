@@ -16,6 +16,7 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import androidx.annotation.IntRange;
 import androidx.appcompat.widget.AppCompatTextView;
 
 public class RoundProgressTextView extends AppCompatTextView {
@@ -177,14 +178,14 @@ public class RoundProgressTextView extends AppCompatTextView {
 		this.maxProgress = maxProgress * 100;
 	}
 
-	public void setProgress(int progress, int duration) {
+	public void setProgress(int progress, @IntRange(from = 0) int duration) {
 		progress = Math.min(maxProgress, progress * 100);
 		if (this.progress == progress) {
 			return;
 		}
 		PathMeasure pathMeasure = new PathMeasure(progressPath, false);
 		final float length = pathMeasure.getLength();
-		if (Math.abs(progress - this.progress) > 1) {
+		if (duration > 0) {
 			ValueAnimator valueAnimator = ValueAnimator.ofInt(this.progress, progress);
 			valueAnimator.setDuration(duration);
 			valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -209,14 +210,14 @@ public class RoundProgressTextView extends AppCompatTextView {
 		}
 	}
 
-	public void setProgressNotInUiThread(int progress, int duration) {
+	public void setProgressNotInUiThread(int progress, @IntRange(from = 0) int duration) {
 		progress = Math.min(maxProgress, progress * 100);
 		if (this.progress == progress) {
 			return;
 		}
 		PathMeasure pathMeasure = new PathMeasure(progressPath, false);
 		final float length = pathMeasure.getLength();
-		if (Math.abs(progress - this.progress) > 1) {
+		if (duration > 0) {
 			ValueAnimator valueAnimator = ValueAnimator.ofInt(this.progress, progress);
 			valueAnimator.setDuration(duration);
 			valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
