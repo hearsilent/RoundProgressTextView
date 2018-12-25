@@ -5,10 +5,10 @@ android {
 
     defaultConfig {
         applicationId "hearsilent.roundprogresstextview"
-        versionCode 102
-        versionName "1.0.2"
         minSdkVersion 14
         targetSdkVersion 28
+        versionCode 103
+        versionName "1.0.3"
     }
     buildTypes {
         release {
