@@ -12,10 +12,11 @@ import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.PathMeasure;
 import android.graphics.RectF;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 public class RoundProgressTextView extends AppCompatTextView {
 
