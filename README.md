@@ -40,7 +40,7 @@ You can customize to what you want.
 
 ## Compatibility
 
-Android GINGERBREAD 2.3+
+Android 4.0+
 
 ### Let me know!
 
