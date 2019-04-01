@@ -1,6 +1,6 @@
 # RoundProgressTextView
 
-TextView with Round Pogress.
+TextView with Round Progress.
 
 ## Screenshot
 <img src="https://raw.githubusercontent.com/hearsilent/RoundProgressTextView/master/screenshots/screenrecord.gif" height="500">
